@@ -1,11 +1,15 @@
 clc;
 clear;
 close all;
+fprintf('Starting the 3D demo of Log-GPIS!\n\n');
 
 lambda = 100; % lambda = 1/sqrt(t)
+sphereRadius = 3;
 v = 3/2;
 noise = 0.05;
 scale = sqrt(2*v);
+fprintf('(lambda, sphere radius) = (%.0f, %.0f)\n', ...
+        lambda, sphereRadius);
 
 % whittle kernel, the special case for matern kernel
 % cov = @(x1, x2)( pdist2(x1, x2)/(2*lambda).*besselk(1, eps + (pdist2(x1, x2))*lambda) ); 
@@ -16,9 +20,9 @@ cov = @(x1, x2)( (1/(gamma(v)*(2^(v-1))))*((pdist2(x1, x2)*(sqrt(2*v))*(lambda/s
 
 % observations as a sphere
 [xa,yb,zc] = sphere(60);
-sphere(:,1) = 3*xa(:);
-sphere(:,2) = 3*yb(:); 
-sphere(:,3) = 3*zc(:);
+sphere(:,1) = sphereRadius*xa(:);
+sphere(:,2) = sphereRadius*yb(:); 
+sphere(:,3) = sphereRadius*zc(:);
 
 % query points
 [xg, yg] = meshgrid(-5:0.1:5, -5:0.1:5);
@@ -34,12 +38,14 @@ K = cov(sphere, sphere);
 k = cov(querySlice, sphere); 
 
 % gp regression 
+fprintf('Start Log-GPIS inference!\n');
 y = zeros(size(sphere, 1), 1) - 0.05;
 y = exp(-y*lambda) + noise*randn(size(sphere, 1), 1);
 mu = k * ((K + noise * eye(N_obs)) \ y); 
 
 % recover the mean according to Log-GPIS
 mean = -(1/lambda) * log((mu)) + 0.05;   
+fprintf('Finished Log-GPIS inference!\n\n');
 
 figure;
 hold on;
@@ -58,3 +64,4 @@ shading interp;
 camlight; 
 lighting phong;
 axis equal;
+disp('Finished the 3D demo of Log-GPIS!');

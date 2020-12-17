@@ -1,6 +1,7 @@
 clc;
 clear;
 close all;
+fprintf('Starting the 2D demo of Log-GPIS!\n\n');
 
 meanWhittle = [];
 meanMatern = [];
@@ -8,10 +9,13 @@ lambdaCount = [];
 for i = 30:5:40
     lambda = i; % lambda = 1/sqrt(t)
     lambdaCount = [lambdaCount,i];
-    circleDim = 5;
+    circleRadius = 5;
     v = 3/2;
     noise = 0.001;
     scale = sqrt(2*v);
+    
+    fprintf('(lambda, circle radius) = (%.0f, %.0f)\n', ...
+        lambda, circleRadius);
 
     % whittle kernel, the special case of matern kernel
     cov1 = @(x1, x2)( pdist2(x1, x2)/(2*lambda).*besselk(1, eps+(pdist2(x1, x2))*lambda) ); 
@@ -22,7 +26,7 @@ for i = 30:5:40
     % cov = @(x1, x2)( exp(-pdist2(x1, x2).^2/lambda) );
 
     % observations of a circle
-    circle = [0, 0] + circleDim * [cos(-pi:0.01:(pi))', sin(-pi:0.01:(pi))']; 
+    circle = [0, 0] + circleRadius * [cos(-pi:0.01:(pi))', sin(-pi:0.01:(pi))']; 
 
     % query points
     [X, Y] = meshgrid(-10:0.1:10, -10:0.1:10);
@@ -41,6 +45,7 @@ for i = 30:5:40
     k2 = cov2(Qpoint, circle); 
 
     % gp regression 
+    fprintf('Start Log-GPIS inference!\n');
     y = zeros(size(circle, 1), 1) - 0.05;
     y = exp(-y*lambda) + noise*randn(size(circle, 1), 1);
     mu1 = k1 * ((K1 + noise * eye(N_obs)) \ y); 
@@ -51,13 +56,14 @@ for i = 30:5:40
     mean2 = -(1 / lambda) * log((mu2)) + 0.05;
     meanWhittle = [meanWhittle,mean1];   
     meanMatern = [meanMatern,mean2]; 
+    fprintf('Finished Log-GPIS inference!\n\n');
     
     figure;
     hold on;
     % regressed using Log-GPIS whittle kernel
     surf(X, Y, reshape(mean1, size(X)), 'EdgeColor', 'none', 'FaceColor', 'r' ); 
     % ground truth (cos it's a circle)
-    surf(X, Y, abs(sqrt(X.^2 + Y.^2) - circleDim), 'EdgeColor', 'none', 'FaceColor', 'g');
+    surf(X, Y, abs(sqrt(X.^2 + Y.^2) - circleRadius), 'EdgeColor', 'none', 'FaceColor', 'g');
     alpha 0.5
     % observations
     plot(circle(:, 1), circle(:, 2), 'ko', 'MarkerFaceColor', 'k'); 
@@ -66,13 +72,14 @@ for i = 30:5:40
     axis equal;
     axis equal;
     set(gca,'FontSize',15);
+    title(['Whittle kernel with {\lambda} ',num2str(lambda),'.']);
     
     figure;
     hold on;
     % regressed using Log-GPIS matern kernel
     surf(X, Y, reshape(mean2, size(X)), 'EdgeColor', 'none', 'FaceColor', 'r' ); 
     % ground truth (cos it's a circle)
-    surf(X, Y, abs(sqrt(X.^2 + Y.^2) - circleDim), 'EdgeColor', 'none', 'FaceColor', 'g');
+    surf(X, Y, abs(sqrt(X.^2 + Y.^2) - circleRadius), 'EdgeColor', 'none', 'FaceColor', 'g');
     alpha 0.5
     % observations
     plot(circle(:, 1), circle(:, 2), 'ko', 'MarkerFaceColor', 'k'); 
@@ -81,11 +88,12 @@ for i = 30:5:40
     axis equal;
     axis equal;
     set(gca,'FontSize',15);
+    title(['Matern kernel with {\lambda} ',num2str(lambda),'.'])
 end
 
 for i = 1:1:size(meanWhittle,2)
-    dist1 = meanWhittle(:,i)-reshape(abs(sqrt(X.^2 + Y.^2) - circleDim),size(mean1));
-    dist2 = meanMatern(:,i)-reshape(abs(sqrt(X.^2 + Y.^2) - circleDim),size(mean2));
+    dist1 = meanWhittle(:,i)-reshape(abs(sqrt(X.^2 + Y.^2) - circleRadius),size(mean1));
+    dist2 = meanMatern(:,i)-reshape(abs(sqrt(X.^2 + Y.^2) - circleRadius),size(mean2));
     RMSE1(i) = sqrt(mean(dist1.^2));
     RMSE2(i) = sqrt(mean(dist2.^2));
 end
@@ -99,3 +107,5 @@ title('Root Mean Squared Error');
 ylabel('RMSE [m]');
 xlabel('{\lambda}');
 set(gca,'FontSize',15);
+
+disp('Finished the 2D demo of Log-GPIS!');
