@@ -14,7 +14,8 @@ The observation is a circle to show our Log-GPIS in a 2D case. To show the resul
 This 3D demo demonstrates that Log-GPIS allows for 3D prediction as a sphere. To see how it goes, just run LogGPIS_demo_3D.m. The result is a black sphere showing the measurements, and the coloured shape or slice is the distance values of the query points.
 
 ## Citation
-If you think Log-GPIS useful in your research, please consider citing our arXiv version, available [here](https://arxiv.org/pdf/2010.11487.pdf)::
+If you think Log-GPIS useful in your research, 
+please consider citing our arXiv version, available [here](https://arxiv.org/pdf/2010.11487.pdf):
 ```
 @article{wu2020faithful,
   title={Faithful Euclidean Distance Field from Log-Gaussian Process Implicit Surfaces},
