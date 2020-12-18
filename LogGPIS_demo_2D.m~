@@ -1,6 +1,10 @@
+%
 % Log-GPIS - Faithful Euclidean Distance Field from Log-Gaussian Process Implicit Surfaces
 % https://github.com/LanWu076/Log-GPIS-demo
-% https://arxiv.org/pdf/2010.11487.pdf
+%
+% This program is free software. You can redistribute it and/or modify it, 
+% but WITHOUT ANY WARRANTY; without even the implied warranty of any FITNESS 
+% FOR A PARTICULAR PURPOSE. 
 %
 % The observation is a circle to show our Log-GPIS in a 2D case. 
 % To show the results, just run LogGPIS_demo_2D.m. 
@@ -8,9 +12,9 @@
 % and the Matern kernel with lambda varying from 30 to 40. Figure 7 shows 
 % the Root Mean Sqrt Error of different kernels and different lambda parameters.
 %
-% This program is free software. You can redistribute it and/or modify it, 
-% but WITHOUT ANY WARRANTY, without even the implied warranty of any FITNESS 
-% FOR A PARTICULAR PURPOSE.
+% ---------------------------------------------------------
+% Copyright (c) 2020, Lan Wu and Ki Myung Brian Lee
+% ---------------------------------------------------------
 
 clc;
 clear;
@@ -102,7 +106,7 @@ for i = 30:5:40
     axis equal;
     axis equal;
     set(gca,'FontSize',15);
-    title(['Matern kernel with {\lambda} ',num2str(lambda),'.']);
+    title(['Matern kernel with {\lambda} ',num2str(lambda),'.'])
 end
 
 for i = 1:1:size(meanWhittle,2)

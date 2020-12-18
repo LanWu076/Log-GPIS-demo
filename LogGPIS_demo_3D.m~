@@ -81,5 +81,5 @@ shading interp;
 camlight; 
 lighting phong;
 axis equal;
-title('Log-GPIS 3D result');
+title('Log-GPIS 3D demo');
 disp('Finished the 3D demo of Log-GPIS!');
