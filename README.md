@@ -5,7 +5,7 @@ This repository contains a demo code to illustrate the basic idea of our paper *
 R2019b Update 4(9.7.0.1296695)
 
 ## License
-To be added.
+Licensed under [GNU General Public License version 3](https://www.gnu.org/licenses/gpl-3.0.html).
 
 ## 2D demo
 The observation is a circle to show our Log-GPIS in a 2D case. To show the results, just run LogGPIS_demo_2D.m. Figure 1 to 6 will show the mean distance inference of the whittle kernel and the Matern kernel with lambda varying from 30 to 40. Figure 7 shows the Root Mean Sqrt Error of different kernels and different lambda parameters.

@@ -52,12 +52,14 @@ k = cov(querySlice, sphere);
 
 % gp regression 
 fprintf('Start Log-GPIS inference!\n');
-y = zeros(size(sphere, 1), 1) - 0.05;
+y = zeros(size(sphere, 1), 1);
+% y = zeros(size(sphere, 1), 1) - 0.05;
 y = exp(-y*lambda) + noise*randn(size(sphere, 1), 1);
 mu = k * ((K + noise * eye(N_obs)) \ y); 
 
 % recover the mean according to Log-GPIS
-mean = -(1/lambda) * log((mu)) + 0.05;   
+mean = -(1/lambda) * log(abs(mu)); 
+% mean = -(1/lambda) * log((mu)) + 0.05;
 fprintf('Finished Log-GPIS inference!\n\n');
 
 figure;

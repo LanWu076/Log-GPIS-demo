@@ -60,14 +60,19 @@ for i = 30:5:40
 
     % gp regression 
     fprintf('Start Log-GPIS inference!\n');
-    y = zeros(size(circle, 1), 1) - 0.05;
+    % y = zeros(size(circle, 1), 1) - 0.05;
+    y = zeros(size(circle, 1), 1);
+
     y = exp(-y*lambda) + noise*randn(size(circle, 1), 1);
     mu1 = k1 * ((K1 + noise * eye(N_obs)) \ y); 
     mu2 = k2 * ((K2 + noise * eye(N_obs)) \ y); 
 
     % recover the mean according to Log-GPIS
-    mean1 = -(1 / lambda) * log((mu1)) + 0.05;
-    mean2 = -(1 / lambda) * log((mu2)) + 0.05;
+    % mean1 = -(1 / lambda) * log((mu1)) + 0.05;
+    % mean2 = -(1 / lambda) * log((mu2)) + 0.05;
+    mean1 = -(1 / lambda) * log(abs(mu1));
+    mean2 = -(1 / lambda) * log(abs(mu2));
+    
     meanWhittle = [meanWhittle,mean1];   
     meanMatern = [meanMatern,mean2]; 
     fprintf('Finished Log-GPIS inference!\n\n');
