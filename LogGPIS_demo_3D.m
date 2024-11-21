@@ -18,16 +18,18 @@ fprintf('Starting the 3D demo of Log-GPIS!\n\n');
 
 lambda = 100; % lambda = 1/sqrt(t)
 sphereRadius = 3;
-v = 3/2;
+%v = 3/2;
 noise = 0.05;
-scale = sqrt(2*v);
+%scale = sqrt(2*v);
 fprintf('(lambda, sphere radius) = (%.0f, %.0f)\n', ...
         lambda, sphereRadius);
 
 % whittle kernel, the special case for matern kernel
-% cov = @(x1, x2)( pdist2(x1, x2)/(2*lambda).*besselk(1, eps + (pdist2(x1, x2))*lambda) ); 
+% cov = @(x1, x2)( exp(-lambda*pdist2(x1, x2,'euclidean')) ); 
+
 % 3/2 matern kernel
-cov = @(x1, x2)( (1/(gamma(v)*(2^(v-1))))*((pdist2(x1, x2)*(sqrt(2*v))*(lambda/scale)).^v) .* besselk(v, eps + (pdist2(x1, x2))*(sqrt(2*v))*(lambda/scale)) ); 
+cov = @(x1, x2)( (1.0+lambda*pdist2(x1, x2,'euclidean')).*exp(-lambda*pdist2(x1, x2,'euclidean')) );
+    
 % SE kernel for comparison
 % cov = @(x1, x2)( exp(-pdist2(x1, x2).^2 / lambda) );
 

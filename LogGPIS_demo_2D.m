@@ -24,18 +24,19 @@ for i = 30:5:40
     lambda = i; % lambda = 1/sqrt(t)
     lambdaCount = [lambdaCount,i];
     circleRadius = 5;
-    v = 3/2;
+    %v = 3/2;
     noise = 0.001;
-    scale = sqrt(2*v);
+    %scale = sqrt(2*v);
     
     fprintf('(lambda, circle radius) = (%.0f, %.0f)\n', ...
         lambda, circleRadius);
 
     % whittle kernel, the special case of matern kernel
-    cov1 = @(x1, x2)( pdist2(x1, x2)/(2*lambda).*besselk(1, eps+(pdist2(x1, x2))*lambda) ); 
-    % 3/2 matern kernel
-    cov2 = @(x1, x2)( (1/(gamma(v)*(2^(v-1))))*((pdist2(x1, x2)*(sqrt(2*v))*(lambda/scale)).^v).*besselk(v,eps+(pdist2(x1, x2))*(sqrt(2*v))*(lambda/scale)) ); 
+    cov1 = @(x1, x2)( exp(-lambda*pdist2(x1, x2,'euclidean')) ); 
 
+    % 3/2 matern kernel
+    cov2 = @(x1, x2)( (1.0+lambda*pdist2(x1, x2,'euclidean')).*exp(-lambda*pdist2(x1, x2,'euclidean')) );
+    
     % SE kernel for comparison
     % cov = @(x1, x2)( exp(-pdist2(x1, x2).^2/lambda) );
 
